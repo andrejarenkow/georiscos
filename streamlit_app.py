@@ -45,7 +45,7 @@ fig = px.scatter_mapbox(
     color='ds_tipo_un',
     hover_name="NOME_MUNICIPIO" if "NOME_MUNICIPIO" in dados.columns else None,
     hover_data=[col for col in dados.columns if col not in ["latitude", "longitude"]],
-    zoom=5.5,
+    zoom=6,
     height=1000,
     title=f"Localização de {label} no RS"
 )
