@@ -52,6 +52,11 @@ fig = px.scatter_mapbox(
 
 fig.update_layout(mapbox_style="open-street-map")
 fig.update_layout(margin={"r":0, "t":30, "l":0, "b":0})
+fig.update_layout(
+    mapbox_style="open-street-map",
+    dragmode="zoom",  # já ajuda no clique + arraste
+    uirevision='map-zoom',  # mantém o estado do zoom ao atualizar
+)
 
 # Exibe o mapa
 st.plotly_chart(fig, use_container_width=True)
