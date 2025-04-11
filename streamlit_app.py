@@ -49,7 +49,7 @@ fig = px.scatter_mapbox(
     height=800,
     width = 800,
     title=f"Localização de {label} no RS",
-    center = {'lat':-30.13733532426768, 'lon':-52.965691240486436}
+    center = {'lat':-30.53733532426768, 'lon':-52.965691240486436}
 )
 
 fig.update_layout(mapbox_style="open-street-map")
