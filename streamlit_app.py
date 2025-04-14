@@ -123,7 +123,7 @@ fig.update_layout(
         lataxis=dict(range=[-34, -26]),  # ajustado para RS
         lonaxis=dict(range=[-58, -48]),
         center=dict(lat=-30.537, lon=-52.965),
-        zoom=5,
+        #zoom=5,
     ),
     margin={"r": 0, "t": 30, "l": 0, "b": 0},
     height=800,
