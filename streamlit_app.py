@@ -114,9 +114,9 @@ for feature in geojson_data["features"]:
 
 # Layout usando `geo`
 fig.update_geos(
-        scope="south america",
-        projection_type="mercator",
-        resolution=50,
+        #scope="south america",
+        #projection_type="mercator",
+        #resolution=50,
         showland=True,
         landcolor="rgb(229, 229, 229)",
         lataxis=dict(range=[-34, -26]),  # ajustado para RS
