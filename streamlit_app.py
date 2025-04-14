@@ -8,7 +8,7 @@ import json
 st.set_page_config(page_title="Mapa de Hospitais, UBS e Alertas INMET", layout="wide")
 
 # Título
-st.title("Hospitais, UBS e Alertas do INMET no Rio Grande do Sul")
+st.title("Hospitais, UBS, Aldeias Indígenas e Alertas do INMET no Rio Grande do Sul")
 
 # Lê os dados
 hospitais = pd.read_csv("dados/hospitais.csv", sep=';')
