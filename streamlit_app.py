@@ -123,7 +123,6 @@ fig.update_layout(
     title=f"Localização de {label} e Alertas INMET no RS"
 )
     
-)
 
 # Exibe o mapa
 st.plotly_chart(fig, use_container_width=True, config={"scrollZoom": True})
