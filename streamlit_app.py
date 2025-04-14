@@ -81,8 +81,20 @@ fig.add_trace(go.Scattermapbox(
     lon=hospitais["longitude"],
     mode='markers',
     marker=go.scattermapbox.Marker(size=8, color="#0055CC"),
-    text=dados["nome_da_unidade"] + " - " + dados["municipio"],
+    text=hospitais["nome_da_unidade"] + " - " + hospitais["municipio"],
     name='Hospitais',
+    hoverinfo='text',
+    opacity = 0.8
+))
+
+# UBS
+fig.add_trace(go.Scattermapbox(
+    lat=ubs["latitude"],
+    lon=ubs["longitude"],
+    mode='markers',
+    marker=go.scattermapbox.Marker(size=8, color="#c90101"),
+    text=ubs["nome_da_unidade"] + " - " + ubs["municipio"],
+    name='UBS',
     hoverinfo='text',
     opacity = 0.8
 ))
