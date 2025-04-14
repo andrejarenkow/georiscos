@@ -104,7 +104,7 @@ fig.add_trace(go.Scattermapbox(
     lat=dados_indigenas["Latitude"],
     lon=dados_indigenas["Longitude"],
     mode='markers',
-    marker=go.scattermapbox.Marker(size=8, color="green"),
+    marker=go.scattermapbox.Marker(size=8, color="f49200"),
     text=dados_indigenas["Aldeia"] + " - " + dados_indigenas["Município"],
     name='Aldeias indígenas',
     hoverinfo='text',
