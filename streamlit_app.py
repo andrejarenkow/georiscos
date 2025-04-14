@@ -131,3 +131,6 @@ fig.update_layout(
 
 # Exibe o mapa
 st.plotly_chart(fig, use_container_width=True, config={"scrollZoom": True})
+
+dados_indigenas = pd.read_excel('dados/Aldeias polo sul.xlsx')
+dados_indigenas
