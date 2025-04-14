@@ -79,7 +79,7 @@ fig.add_trace(go.Scattermapbox(
     lat=dados["latitude"],
     lon=dados["longitude"],
     mode='markers',
-    marker=go.scattermapbox.Marker(size=8, color=dados["Tipo"]),
+    marker=go.scattermapbox.Marker(size=8, color=dados["ds_tipo_un"]),
     text=dados["nome_da_unidade"] + " - " + dados["municipio"],
     name=label,
     hoverinfo='text'
