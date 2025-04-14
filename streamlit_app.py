@@ -114,7 +114,7 @@ for feature in geojson_data["features"]:
 
 # Layout do mapa
 fig.update_layout(
-    mapbox=dict(
+    geo=dict(
         style="open-street-map",
         zoom=6,
         center={"lat": -30.537, "lon": -52.965}
