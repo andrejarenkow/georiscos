@@ -71,7 +71,7 @@ geojson_data = obter_alertas_rs()
 fig = go.Figure()
 
 # Adiciona os pontos de hospitais/UBS
-fig.add_trace(go.Scattermap(
+fig.add_trace(go.Scattermapbox(
     lat=dados["latitude"],
     lon=dados["longitude"],
     mode='markers',
@@ -99,7 +99,7 @@ for feature in geojson_data["features"]:
     descricao = props.get("descricao", "Alerta")
     estados = props.get("estados", "")
 
-    fig.add_trace(go.Scattermap(
+    fig.add_trace(go.Scattermapbox(
         lat=lat,
         lon=lon,
         mode='lines',
