@@ -123,7 +123,7 @@ fig.update_geos(
         lonaxis=dict(range=[-58, -48]),
         center=dict(lat=-30.537, lon=-52.965),
         visible = False,
-        projection=dict(scale = 5),
+        projection_scale= 5,
         
 )
 fig.update_layout(
