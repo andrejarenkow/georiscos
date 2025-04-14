@@ -50,9 +50,13 @@ def obter_alertas_rs():
         
         lista_avisos_rs = []
         for aviso in dados.get('hoje', []):
-            if 'Rio Grande do Sul' not in aviso.get('estados', ''):
+            if 'Rio Grande do Sul' in aviso.get('estados', ''):
                 lista_avisos_rs.append(aviso)
-
+                
+        for aviso in dados.get('futuro', []):
+            if 'Rio Grande do Sul' in aviso.get('estados', ''):
+                lista_avisos_rs.append(aviso)
+                
         lista_features = []
         for aviso in lista_avisos_rs:
             feature = geojson.Feature(geometry=json.loads(aviso['poligono']), properties=aviso)
