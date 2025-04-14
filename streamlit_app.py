@@ -76,7 +76,7 @@ fig.add_trace(go.Scattermapbox(
     lon=dados["longitude"],
     mode='markers',
     marker=go.scattermapbox.Marker(size=8, color="blue" if tipo == "Hospitais" else "green" if tipo == "UBS" else dados["Tipo"].map({"Hospital": "blue", "UBS": "green"})),
-    text=dados["municipio"] if "municipio" in dados.columns else None,
+    text=text=dados["nome_da_unidade"] + " - " + dados["municipio"],
     name=label,
     hoverinfo='text'
 ))
