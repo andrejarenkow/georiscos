@@ -82,7 +82,8 @@ fig.add_trace(go.Scattermapbox(
     marker=go.scattermapbox.Marker(size=8, color="#0055CC" if tipo == "Hospitais" else "#C9372C" if tipo == "UBS" else dados["Tipo"].map({"Hospital": "#0055CC", "UBS": "#C9372C"})),
     text=dados["nome_da_unidade"] + " - " + dados["municipio"],
     name=label,
-    hoverinfo='text'
+    hoverinfo='text',
+    opacity = 0.8
 ))
 
 # Função para converter cor hex para rgba com opacidade
