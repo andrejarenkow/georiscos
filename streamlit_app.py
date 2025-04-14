@@ -114,7 +114,7 @@ for feature in geojson_data["features"]:
 
 # Layout usando `geo`
 fig.update_geos(
-        #scope="south america",
+        scope="south america",
         projection_type="mercator",
         resolution=50,
         showland=True,
