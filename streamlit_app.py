@@ -71,11 +71,11 @@ geojson_data = obter_alertas_rs()
 fig = go.Figure()
 
 # Adiciona os pontos de hospitais/UBS
-fig.add_trace(go.scattermap(
+fig.add_trace(go.Scattermapbox(
     lat=dados["latitude"],
     lon=dados["longitude"],
     mode='markers',
-    marker=go.scattermap.Marker(size=8, color="blue" if tipo == "Hospitais" else "green" if tipo == "UBS" else dados["Tipo"].map({"Hospital": "blue", "UBS": "green"})),
+    marker=go.Scattermapbox.Marker(size=8, color="blue" if tipo == "Hospitais" else "green" if tipo == "UBS" else dados["Tipo"].map({"Hospital": "blue", "UBS": "green"})),
     text=dados["nome_da_unidade"] + " - " + dados["municipio"],
     name=label,
     hoverinfo='text'
