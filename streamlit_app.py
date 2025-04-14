@@ -84,7 +84,7 @@ fig.add_trace(go.Scattermapbox(
     text=hospitais["nome_da_unidade"] + " - " + hospitais["municipio"],
     name='Hospitais',
     hoverinfo='text',
-    opacity = 0.5
+    opacity = 0.7
 ))
 
 # UBS
@@ -96,7 +96,7 @@ fig.add_trace(go.Scattermapbox(
     text=ubs["nome_da_unidade"] + " - " + ubs["municipio"],
     name='UBS',
     hoverinfo='text',
-    opacity = 0.5
+    opacity = 0.7
 ))
 
 # Adiciona os pontos de aldeias indigenas
@@ -108,7 +108,7 @@ fig.add_trace(go.Scattermapbox(
     text=dados_indigenas["Aldeia"] + " - " + dados_indigenas["Município"],
     name='Aldeias indígenas',
     hoverinfo='text',
-    opacity = 0.5
+    opacity = 0.7
 ))
 
 # Função para converter cor hex para rgba com opacidade
