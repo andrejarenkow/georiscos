@@ -13,6 +13,7 @@ st.title("Hospitais, UBS e Alertas do INMET no Rio Grande do Sul")
 # Lê os dados
 hospitais = pd.read_csv("dados/hospitais.csv", sep=';')
 ubs = pd.read_csv("dados/ubs.csv", sep=';')
+dados_indigenas = pd.read_excel('dados/Aldeias polo sul.xlsx')
 
 # Ajusta colunas de coordenadas se necessário
 for df in [hospitais, ubs]:
@@ -86,6 +87,18 @@ fig.add_trace(go.Scattermapbox(
     opacity = 0.8
 ))
 
+# Adiciona os pontos de aldeias indigenas
+fig.add_trace(go.Scattermapbox(
+    lat=dados_indigenas["Latitude"],
+    lon=dados_indigenas["Longitude"],
+    mode='markers',
+    marker=go.scattermapbox.Marker(size=8, color="green"),
+    text=dados_indigenas["Aldeia"] + " - " + dados_indigenas["Município"],
+    name=label,
+    hoverinfo='text',
+    opacity = 0.8
+))
+
 # Função para converter cor hex para rgba com opacidade
 def hex_to_rgba(hex_color, alpha=0.5):
     hex_color = hex_color.lstrip("#")
@@ -132,5 +145,4 @@ fig.update_layout(
 # Exibe o mapa
 st.plotly_chart(fig, use_container_width=True, config={"scrollZoom": True})
 
-dados_indigenas = pd.read_excel('dados/Aldeias polo sul.xlsx')
-dados_indigenas
+
