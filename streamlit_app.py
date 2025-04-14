@@ -124,7 +124,7 @@ fig.update_layout(
             #center=dict(lat=-30.537, lon=-52.965),
             #visible = False,
             projection_scale= 10,
-            projection_type = "hyperelliptical",
+            projection_type = "natural earth1",
 
     )
     
