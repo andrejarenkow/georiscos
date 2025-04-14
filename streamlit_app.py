@@ -77,12 +77,12 @@ fig = go.Figure()
 
 # Adiciona os pontos de hospitais/UBS
 fig.add_trace(go.Scattermapbox(
-    lat=dados["latitude"],
-    lon=dados["longitude"],
+    lat=hospitais["latitude"],
+    lon=hospitais["longitude"],
     mode='markers',
-    marker=go.scattermapbox.Marker(size=8, color="#0055CC" if tipo == "Hospitais" else "#C9372C" if tipo == "UBS" else dados["Tipo"].map({"Hospital": "#0055CC", "UBS": "#C9372C"})),
+    marker=go.scattermapbox.Marker(size=8, color="#0055CC"),
     text=dados["nome_da_unidade"] + " - " + dados["municipio"],
-    name=label,
+    name='Hospitais',
     hoverinfo='text',
     opacity = 0.8
 ))
