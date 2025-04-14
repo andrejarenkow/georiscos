@@ -81,9 +81,18 @@ fig.add_trace(go.Scattermapbox(
     hoverinfo='text'
 ))
 
+# Função para converter cor hex para rgba com opacidade
+def hex_to_rgba(hex_color, alpha=0.5):
+    hex_color = hex_color.lstrip("#")
+    if len(hex_color) == 6:
+        r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+        return f"rgba({r},{g},{b},{alpha})"
+    else:
+        return "rgba(255,0,0,0.5)"  # fallback para vermelho com opacidade
+
 # Adiciona os polígonos dos alertas
 for feature in geojson_data["features"]:
-    coords = feature["geometry"]["coordinates"][0]  # Primeiro anel do polígono
+    coords = feature["geometry"]["coordinates"][0]
     lon, lat = zip(*coords)
     props = feature["properties"]
     cor_aviso = props.get("aviso_cor", "#FF0000")
@@ -96,11 +105,12 @@ for feature in geojson_data["features"]:
         mode='lines',
         fill='toself',
         line=dict(width=2, color='black'),
-        fillcolor=cor_aviso,
+        fillcolor=hex_to_rgba(cor_aviso, alpha=0.5),
         name=f"Alerta: {descricao}",
         hoverinfo='text',
         text=f"{descricao}<br>Estados: {estados}"
     ))
+
 
 # Layout do mapa
 fig.update_layout(
