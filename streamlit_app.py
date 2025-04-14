@@ -23,7 +23,7 @@ for df in [hospitais, ubs]:
         df.rename(columns={"X": "longitude", "Y": "latitude"}, inplace=True)
 
 # Filtro opcional
-tipo = st.radio("Escolha o que mostrar no mapa:", ["Hospitais", "UBS", "Ambos"])
+tipo = "Ambos"
 
 # Mapeamento dos dados
 if tipo == "Hospitais":
