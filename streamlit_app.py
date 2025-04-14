@@ -1,115 +1,118 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-import geopandas as gpd
-import json
+import plotly.graph_objects as go
 import requests
+import geojson
+import json
 
-st.set_page_config(page_title="Mapa de Hospitais e UBS", layout="wide")
+st.set_page_config(page_title="Mapa de Hospitais, UBS e Alertas INMET", layout="wide")
 
-st.title("Hospitais e UBS do Rio Grande do Sul")
+# Título
+st.title("Hospitais, UBS e Alertas do INMET no Rio Grande do Sul")
 
-# === Função para buscar alertas do INMET ===
-def buscar_alertas_rs():
-    url = "https://apiprevmet3.inmet.gov.br/avisos/rs"
-    try:
-        response = requests.get(url)
-        alertas = response.json()
-
-        features = []
-        for alerta in alertas:
-            if "geometry" in alerta and alerta["geometry"]:
-                features.append({
-                    "type": "Feature",
-                    "geometry": alerta["geometry"],
-                    "properties": {
-                        "titulo": alerta["titulo"],
-                        "nivel": alerta.get("nivel"),
-                        "inicio": alerta.get("inicio"),
-                        "fim": alerta.get("fim"),
-                        "descricao": alerta.get("descricao")
-                    }
-                })
-
-        geojson_alertas = {
-            "type": "FeatureCollection",
-            "features": features
-        }
-
-        gdf_alertas = gpd.GeoDataFrame.from_features(geojson_alertas, crs="EPSG:4326")
-        return gdf_alertas
-
-    except Exception as e:
-        st.error(f"Erro ao buscar alertas: {e}")
-        return gpd.GeoDataFrame()
-
-# === Lê os dados de hospitais e UBS ===
+# Lê os dados
 hospitais = pd.read_csv("dados/hospitais.csv", sep=';')
 ubs = pd.read_csv("dados/ubs.csv", sep=';')
 
-# Corrige colunas
+# Ajusta colunas de coordenadas se necessário
 for df in [hospitais, ubs]:
     if 'longitude' not in df.columns and 'x' in df.columns:
         df.rename(columns={"x": "longitude", "y": "latitude"}, inplace=True)
     elif 'X' in df.columns:
         df.rename(columns={"X": "longitude", "Y": "latitude"}, inplace=True)
 
-# === Busca os alertas ===
-gdf_alertas = buscar_alertas_rs()
-geojson_alertas = json.loads(gdf_alertas.to_json()) if not gdf_alertas.empty else None
-
-# === Filtro de tipo ===
+# Filtro opcional
 tipo = st.radio("Escolha o que mostrar no mapa:", ["Hospitais", "UBS", "Ambos"])
 
+# Mapeamento dos dados
 if tipo == "Hospitais":
     dados = hospitais
+    cor = "blue"
     label = "Hospitais"
 elif tipo == "UBS":
     dados = ubs
+    cor = "green"
     label = "UBS"
 else:
     hospitais["Tipo"] = "Hospital"
     ubs["Tipo"] = "UBS"
     dados = pd.concat([hospitais, ubs])
+    cor = "Tipo"
     label = "Hospitais e UBS"
 
-# === Mapa base ===
-fig = px.scatter_mapbox(
-    dados,
-    lat="latitude",
-    lon="longitude",
-    color='ds_tipo_un',
-    hover_name="NOME_MUNICIPIO" if "NOME_MUNICIPIO" in dados.columns else None,
-    hover_data=[col for col in dados.columns if col not in ["latitude", "longitude"]],
-    zoom=6,
+# Função para buscar os alertas do INMET
+def obter_alertas_rs():
+    url = "https://apiprevmet3.inmet.gov.br/avisos/ativos"
+    try:
+        resposta = requests.get(url)
+        resposta.raise_for_status()
+        dados = resposta.json()
+        
+        lista_avisos_rs = []
+        for aviso in dados.get('hoje', []):
+            if 'Rio Grande do Sul' in aviso.get('estados', ''):
+                lista_avisos_rs.append(aviso)
+
+        lista_features = []
+        for aviso in lista_avisos_rs:
+            feature = geojson.Feature(geometry=json.loads(aviso['poligono']), properties=aviso)
+            lista_features.append(feature)
+
+        feature_collection = geojson.FeatureCollection(lista_features)
+        return json.loads(geojson.dumps(feature_collection))
+    except Exception as e:
+        st.error(f"Erro ao buscar dados do INMET: {e}")
+        return {"features": []}
+
+# Recupera os dados dos alertas
+geojson_data = obter_alertas_rs()
+
+# Criação do mapa base
+fig = go.Figure()
+
+# Adiciona os pontos de hospitais/UBS
+fig.add_trace(go.Scattermapbox(
+    lat=dados["latitude"],
+    lon=dados["longitude"],
+    mode='markers',
+    marker=go.scattermapbox.Marker(size=8, color="blue" if tipo == "Hospitais" else "green" if tipo == "UBS" else dados["Tipo"].map({"Hospital": "blue", "UBS": "green"})),
+    text=dados["NOME_MUNICIPIO"] if "NOME_MUNICIPIO" in dados.columns else None,
+    name=label,
+    hoverinfo='text'
+))
+
+# Adiciona os polígonos dos alertas
+for feature in geojson_data["features"]:
+    coords = feature["geometry"]["coordinates"][0]  # Primeiro anel do polígono
+    lon, lat = zip(*coords)
+    props = feature["properties"]
+    cor_aviso = props.get("aviso_cor", "#FF0000")
+    descricao = props.get("descricao", "Alerta")
+    estados = props.get("estados", "")
+
+    fig.add_trace(go.Scattermapbox(
+        lat=lat,
+        lon=lon,
+        mode='lines',
+        fill='toself',
+        line=dict(width=2, color='black'),
+        fillcolor=cor_aviso,
+        name=f"Alerta: {descricao}",
+        hoverinfo='text',
+        text=f"{descricao}<br>Estados: {estados}"
+    ))
+
+# Layout do mapa
+fig.update_layout(
+    mapbox=dict(
+        style="open-street-map",
+        zoom=6,
+        center={"lat": -30.537, "lon": -52.965}
+    ),
+    margin={"r": 0, "t": 30, "l": 0, "b": 0},
     height=800,
-    width=800,
-    title=f"Localização de {label} no RS",
-    center={'lat': -30.537, 'lon': -52.965}
+    title=f"Localização de {label} e Alertas INMET no RS"
 )
 
-fig.update_layout(mapbox_style="open-street-map")
-
-# === Adiciona polígonos dos alertas, se existirem ===
-if geojson_alertas:
-    fig.update_layout(
-        mapbox_layers=[
-            {
-                "sourcetype": "geojson",
-                "source": geojson_alertas,
-                "type": "fill",
-                "color": "rgba(255,0,0,0.2)",
-                "opacity": 0.3
-            },
-            {
-                "sourcetype": "geojson",
-                "source": geojson_alertas,
-                "type": "line",
-                "color": "red",
-                "line": {"width": 2}
-            }
-        ]
-    )
-
-fig.update_layout(margin={"r": 0, "t": 30, "l": 0, "b": 0})
+# Exibe o mapa
 st.plotly_chart(fig, use_container_width=True, config={"scrollZoom": True})
