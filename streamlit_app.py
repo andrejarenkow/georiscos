@@ -113,7 +113,7 @@ for feature in geojson_data["features"]:
 
 
 # Layout usando `geo`
-fig.update_layout(
+fig.update_geos(
     geo=dict(
         #scope="south america",
         projection_type="mercator",
