@@ -115,7 +115,7 @@ for feature in geojson_data["features"]:
 # Layout usando `geo`
 fig.update_layout(
     geo=dict(
-        scope="south america",
+        #scope="south america",
         projection_type="mercator",
         resolution=50,
         showland=True,
@@ -123,7 +123,7 @@ fig.update_layout(
         lataxis=dict(range=[-34, -26]),  # ajustado para RS
         lonaxis=dict(range=[-58, -48]),
         center=dict(lat=-30.537, lon=-52.965),
-        resolution=6,
+        
     ),
     margin={"r": 0, "t": 30, "l": 0, "b": 0},
     height=800,
