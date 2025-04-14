@@ -113,20 +113,15 @@ for feature in geojson_data["features"]:
 
 
 fig.update_layout(
-        margin={"r": 0, "t": 30, "l": 0, "b": 0},
-        height=800,
-        title=f"Localização de {label} e Alertas INMET no RS",
-        geo = dict(
-            #showland=True,
-            #landcolor="rgb(229, 229, 229)",
-            #lataxis=dict(range=[-34, -26]),  # ajustado para RS
-            #lonaxis=dict(range=[-58, -48]),
-            #center=dict(lat=-30.537, lon=-52.965),
-            #visible = False,
-            projection_scale= 10,
-            projection_type = "natural earth1",
-
-    )
+    mapbox=dict(
+        style="open-street-map",
+        zoom=6,
+        center={"lat": -30.537, "lon": -52.965}
+    ),
+    margin={"r": 0, "t": 30, "l": 0, "b": 0},
+    height=800,
+    title=f"Localização de {label} e Alertas INMET no RS"
+)
     
 )
 
