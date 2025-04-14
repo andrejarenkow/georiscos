@@ -124,8 +124,8 @@ fig.update_geos(
         center=dict(lat=-30.537, lon=-52.965),
         visible = False,
         #margin={"r": 0, "t": 30, "l": 0, "b": 0},
-        height=800,
-        title=f"Localização de {label} e Alertas INMET no RS"
+        #height=800,
+        #title=f"Localização de {label} e Alertas INMET no RS"
 )
 
 # Exibe o mapa
