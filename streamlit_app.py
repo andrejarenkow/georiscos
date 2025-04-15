@@ -223,7 +223,7 @@ for feature in geojson_municipios["features"]:
     for polygon in coords_list:
         for ring in polygon:
             lons, lats = zip(*ring)
-            fig.add_trace(go.Scattergeo(
+            fig.add_trace(go.Scattermapbox(
                 lon=lons,
                 lat=lats,
                 mode="lines",
