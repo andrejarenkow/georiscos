@@ -1,14 +1,15 @@
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
 import requests
 import geojson
 import json
 from bs4 import BeautifulSoup
 import re
 import geopandas as gpd
+import folium
+from streamlit_folium import st_folium
 
-# Configurações da página
+# Configuração da página
 st.set_page_config(
     page_title="Georiscos",
     page_icon=":foggy:",
@@ -16,22 +17,16 @@ st.set_page_config(
     initial_sidebar_state='expanded'
 )
 
+# Cabeçalho
 col1, col2, col3 = st.columns([1, 4, 1])
 col1.image('https://github.com/andrejarenkow/csv/blob/master/logo_cevs%20(2).png?raw=true', width=100)
 col2.header('Mapa de Riscos no Rio Grande do Sul')
 col3.image('https://github.com/andrejarenkow/csv/blob/master/logo_estado%20(3)%20(1).png?raw=true', width=150)
 
-# Sidebar para upload do arquivo
 st.sidebar.header("Georiscos")
+st.sidebar.write("aaaaaaaaaa")
 
-# Sidebar para upload do arquivo
-texto = """
-aaaaaaaaaa
-"""
-st.sidebar.write(texto)
-
-# Busca de dados de deslizamentos
-# Requisição
+# Busca dados de deslizamentos
 url = "https://georisk.cemaden.gov.br/?dia=0&grid=intermediaria&markers=LocaisDeslizamentosMarker"
 headers = {"User-Agent": "Mozilla/5.0"}
 response = requests.get(url, headers=headers)
@@ -44,15 +39,11 @@ if response.status_code == 200:
 
     for script in scripts:
         texto = script.text.replace('\\', '')
-
-        # Pega apenas trechos dentro de self.__next_f.push([...])
         match_push = re.search(r'self\.__next_f\.push\(\[(.*?)\]\)', texto, re.DOTALL)
         if not match_push:
             continue
 
         conteudo = match_push.group(1)
-
-        # Extrai todos os dicionários que contenham Latitude e Longitude
         blocos = re.findall(r'{[^}]*"Latitude":[^}]*"Longitude":[^}]*}', conteudo)
 
         for bloco in blocos:
@@ -75,73 +66,57 @@ if response.status_code == 200:
                     })
             except Exception:
                 continue
-else:
-    print("Erro ao acessar o site.")
 
-# Transforma em DataFrame
 df = pd.DataFrame(dados).drop_duplicates().reset_index(drop=True)
 
-
-# Filtros para os limites do estado do Rio Grande do Sul
+# Filtros para RS
 lat_min, lat_max = -33.75, -27.0
 lon_min, lon_max = -57.65, -49.5
-
-# Aplicando o filtro
 df_deslizamentos = df[
     (df['Latitude'] >= lat_min) & (df['Latitude'] <= lat_max) &
     (df['Longitude'] >= lon_min) & (df['Longitude'] <= lon_max)
 ].reset_index(drop=True)
 
-
-
-# Lê os dados
+# Lê dados locais
 hospitais = pd.read_csv("dados/hospitais.csv", sep=';')
 ubs = pd.read_csv("dados/ubs.csv", sep=';')
 dados_indigenas = pd.read_excel('dados/Aldeias polo sul.xlsx')
 
-# Ajusta colunas de coordenadas se necessário
-for df in [hospitais, ubs]:
-    if 'longitude' not in df.columns and 'x' in df.columns:
-        df.rename(columns={"x": "longitude", "y": "latitude"}, inplace=True)
-    elif 'X' in df.columns:
-        df.rename(columns={"X": "longitude", "Y": "latitude"}, inplace=True)
+# Ajusta colunas
+for df_local in [hospitais, ubs]:
+    if 'longitude' not in df_local.columns and 'x' in df_local.columns:
+        df_local.rename(columns={"x": "longitude", "y": "latitude"}, inplace=True)
+    elif 'X' in df_local.columns:
+        df_local.rename(columns={"X": "longitude", "Y": "latitude"}, inplace=True)
 
-# Filtro opcional
+# Tipo de dados no mapa
 tipo = "Ambos"
-
-# Mapeamento dos dados
 if tipo == "Hospitais":
     dados = hospitais
-    cor = "blue"
-    label = "Hospitais"
 elif tipo == "UBS":
     dados = ubs
-    cor = "green"
-    label = "UBS"
 else:
     hospitais["Tipo"] = "Hospital"
     ubs["Tipo"] = "UBS"
     dados = pd.concat([hospitais, ubs])
-    cor = "Tipo"
-    label = "Hospitais e UBS"
+label = "Hospitais e UBS"
 
-# Função para buscar os alertas do INMET
+# Função para buscar alertas do INMET
 def obter_alertas_rs():
     url = "https://apiprevmet3.inmet.gov.br/avisos/ativos"
     try:
         resposta = requests.get(url)
         resposta.raise_for_status()
         dados = resposta.json()
-        
+
         lista_avisos_rs = []
         for aviso in dados.get('hoje', []):
             if 'Rio Grande do Sul' in aviso.get('estados', ''):
                 lista_avisos_rs.append(aviso)
-                
         for aviso in dados.get('futuro', []):
             if 'Rio Grande do Sul' in aviso.get('estados', ''):
                 lista_avisos_rs.append(aviso)
-                
+
         lista_features = []
         for aviso in lista_avisos_rs:
             feature = geojson.Feature(geometry=json.loads(aviso['poligono']), properties=aviso)
@@ -149,109 +124,77 @@ def obter_alertas_rs():
 
         feature_collection = geojson.FeatureCollection(lista_features)
         return json.loads(geojson.dumps(feature_collection))
-    except Exception as e:
-        st.error(f"Sem alertas para o Estado")
+    except Exception:
+        st.error("Sem alertas para o Estado")
         return {"features": []}
 
-# Recupera os dados dos alertas
+# Carrega os alertas
 geojson_data = obter_alertas_rs()
 
-# Criação do mapa base
-fig = go.Figure()
+# Mapa base centrado no RS
+m = folium.Map(location=[-30.537, -52.965], zoom_start=6, tiles="OpenStreetMap")
 
-# Adiciona os pontos de hospitais/UBS
-fig.add_trace(go.Scattermapbox(
-    lat=hospitais["latitude"],
-    lon=hospitais["longitude"],
-    mode='markers',
-    marker=go.scattermapbox.Marker(size=8, color="#0055CC"),
-    text=hospitais["nome_da_unidade"] + " - " + hospitais["municipio"],
-    name='Hospitais',
-    hoverinfo='text',
-    opacity = 0.7
-))
+# Adiciona hospitais
+for _, row in hospitais.iterrows():
+    folium.CircleMarker(
+        location=[row["latitude"], row["longitude"]],
+        radius=6,
+        color="#0055CC",
+        fill=True,
+        fill_color="#0055CC",
+        fill_opacity=0.7,
+        popup=f'Hospital: {row["nome_da_unidade"]} - {row["municipio"]}'
+    ).add_to(m)
 
-# UBS
-fig.add_trace(go.Scattermapbox(
-    lat=ubs["latitude"],
-    lon=ubs["longitude"],
-    mode='markers',
-    marker=go.scattermapbox.Marker(size=5, color="#c90101"),
-    text=ubs["nome_da_unidade"] + " - " + ubs["municipio"],
-    name='UBS',
-    hoverinfo='text',
-    opacity = 0.7
-))
+# Adiciona UBS
+for _, row in ubs.iterrows():
+    folium.CircleMarker(
+        location=[row["latitude"], row["longitude"]],
+        radius=5,
+        color="#c90101",
+        fill=True,
+        fill_color="#c90101",
+        fill_opacity=0.7,
+        popup=f'UBS: {row["nome_da_unidade"]} - {row["municipio"]}'
+    ).add_to(m)
 
-# Adiciona os pontos de aldeias indigenas
-fig.add_trace(go.Scattermapbox(
-    lat=dados_indigenas["Latitude"],
-    lon=dados_indigenas["Longitude"],
-    mode='markers',
-    marker=go.scattermapbox.Marker(size=8, color="#f49200"),
-    text=dados_indigenas["Aldeia"] + " - " + dados_indigenas["Município"],
-    name='Aldeias indígenas',
-    hoverinfo='text',
-    opacity = 0.7
-))
+# Adiciona aldeias indígenas
+for _, row in dados_indigenas.iterrows():
+    folium.Marker(
+        location=[row["Latitude"], row["Longitude"]],
+        icon=folium.Icon(color="orange", icon="info-sign"),
+        popup=f'Aldeia: {row["Aldeia"]} - {row["Município"]}'
+    ).add_to(m)
 
-# Adiciona os pontos de deslizamentos
-fig.add_trace(go.Scattermapbox(
-    lat=df_deslizamentos["Latitude"],
-    lon=df_deslizamentos["Longitude"],
-    mode='markers',
-    marker=go.scattermapbox.Marker(size=8, color="#8c592f"),
-    text=df_deslizamentos["Magnitude_evento"],
-    name='Deslizamentos',
-    hoverinfo='text',
-    opacity = 0.7
-))
+# Adiciona deslizamentos
+for _, row in df_deslizamentos.iterrows():
+    folium.CircleMarker(
+        location=[row["Latitude"], row["Longitude"]],
+        radius=6,
+        color="#8c592f",
+        fill=True,
+        fill_color="#8c592f",
+        fill_opacity=0.7,
+        popup=f'Deslizamento: {row["Magnitude_evento"]} - {row["Data Ocorrência"]}'
+    ).add_to(m)
 
-
-# Função para converter cor hex para rgba com opacidade
-def hex_to_rgba(hex_color, alpha=0.5):
-    hex_color = hex_color.lstrip("#")
-    if len(hex_color) == 6:
-        r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
-        return f"rgba({r},{g},{b},{alpha})"
-    else:
-        return "rgba(255,0,0,0.5)"  # fallback para vermelho com opacidade
-
-# Adiciona os polígonos dos alertas
+# Adiciona polígonos dos alertas
 for feature in geojson_data["features"]:
     coords = feature["geometry"]["coordinates"][0]
-    lon, lat = zip(*coords)
     props = feature["properties"]
-    cor_aviso = props.get("aviso_cor", "#FF0000")
     descricao = props.get("descricao", "Alerta")
     estados = props.get("estados", "")
+    cor_aviso = props.get("aviso_cor", "#FF0000")
 
-    fig.add_trace(go.Scattermapbox(
-        lat=lat,
-        lon=lon,
-        mode='lines',
-        fill='toself',
-        line=dict(width=2, color='black'),
-        fillcolor=hex_to_rgba(cor_aviso, alpha=0.5),
-        name=f"Alerta: {descricao}",
-        hoverinfo='text',
-        text=f"{descricao}<br>Estados: {estados}"
-    ))
-
-
-fig.update_layout(
-    mapbox=dict(
-        style="open-street-map",
-        zoom=6,
-        center={"lat": -30.537, "lon": -52.965}
-    ),
-    margin={"r": 0, "t": 30, "l": 0, "b": 0},
-    height=800,
-    title=f"Localização de {label} e Alertas INMET no RS"
-)
-    
+    rgba_cor = cor_aviso if cor_aviso.startswith("rgba") else cor_aviso
+    folium.Polygon(
+        locations=[[lat, lon] for lon, lat in coords],
+        color="black",
+        fill_color=rgba_cor,
+        fill_opacity=0.4,
+        weight=2,
+        popup=f"{descricao} - Estados: {estados}"
+    ).add_to(m)
 
 # Exibe o mapa
-st.plotly_chart(fig, use_container_width=True, config={"scrollZoom": True})
-
-
+st_data = st_folium(m, width=1400, height=800)
