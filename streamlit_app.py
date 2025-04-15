@@ -17,11 +17,8 @@ st.set_page_config(
 
 col1, col2, col3 = st.columns([1, 4, 1])
 col1.image('https://github.com/andrejarenkow/csv/blob/master/logo_cevs%20(2).png?raw=true', width=100)
-col2.header('Coordenadas Notificações Dengue')
+col2.header('Mapa de Riscos no Rio Grande do Sul')
 col3.image('https://github.com/andrejarenkow/csv/blob/master/logo_estado%20(3)%20(1).png?raw=true', width=150)
-
-# Título
-st.title("Hospitais, UBS, Aldeias Indígenas e Alertas do INMET no Rio Grande do Sul")
 
 # Sidebar para upload do arquivo
 st.sidebar.header("Georiscos")
