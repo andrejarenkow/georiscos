@@ -158,6 +158,9 @@ try:
         )
     ).add_to(m)
 
+except Exception as e:
+    st.warning(f"Não foi possível carregar os municípios do RS: {e}")
+
 # Adiciona hospitais
 for _, row in hospitais.iterrows():
     folium.CircleMarker(
@@ -224,8 +227,7 @@ for feature in geojson_data["features"]:
 
     folium.LayerControl(collapsed=False).add_to(m)
 
-except Exception as e:
-    st.warning(f"Não foi possível carregar os municípios do RS: {e}")
+
 
 # Exibe o mapa
 st_data = st_folium(m, width=1400, height=800, returned_objects=[])
