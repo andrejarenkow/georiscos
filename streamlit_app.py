@@ -158,7 +158,7 @@ fig.add_trace(go.Scattermapbox(
     lat=ubs["latitude"],
     lon=ubs["longitude"],
     mode='markers',
-    marker=go.scattermapbox.Marker(size=3, color="#c90101"),
+    marker=go.scattermapbox.Marker(size=5, color="#c90101"),
     text=ubs["nome_da_unidade"] + " - " + ubs["municipio"],
     name='UBS',
     hoverinfo='text',
