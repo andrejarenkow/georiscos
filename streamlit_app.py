@@ -207,33 +207,7 @@ fig.add_trace(go.Scattermapbox(
     opacity = 0.7
 ))
 
-# Carrega o GeoJSON como GeoDataFrame
-gdf = gpd.read_file("https://raw.githubusercontent.com/andrejarenkow/geodata/refs/heads/main/municipios_rs_CRS/RS_Municipios_2021.json")
 
-# Reprojeta para WGS84 (necessário para lat/lon no plotly)
-gdf = gdf.to_crs("EPSG:4326")
-
-# Simplifica os polígonos (ajuste a tolerância conforme necessário)
-gdf["geometry"] = gdf["geometry"].simplify(tolerance=0.01, preserve_topology=True)
-
-# Adiciona apenas contornos
-for geom in gdf.geometry:
-    if geom.geom_type == "Polygon":
-        rings = [geom.exterior.coords]
-    elif geom.geom_type == "MultiPolygon":
-        rings = [poly.exterior.coords for poly in geom.geoms]
-    else:
-        continue
-
-    for ring in rings:
-        lons, lats = zip(*ring)
-        fig.add_trace(go.Scattermapbox(
-            lon=lons,
-            lat=lats,
-            mode="lines",
-            line=dict(color="black", width=0.2),
-            showlegend=False
-        ))
 # Função para converter cor hex para rgba com opacidade
 def hex_to_rgba(hex_color, alpha=0.5):
     hex_color = hex_color.lstrip("#")
