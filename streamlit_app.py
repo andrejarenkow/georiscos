@@ -4,6 +4,8 @@ import plotly.graph_objects as go
 import requests
 import geojson
 import json
+from bs4 import BeautifulSoup
+import re
 
 st.set_page_config(page_title="Mapa de Hospitais, UBS e Alertas INMET", layout="wide")
 
