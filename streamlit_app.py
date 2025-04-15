@@ -81,6 +81,8 @@ df_deslizamentos = df[
 hospitais = pd.read_csv("dados/hospitais.csv", sep=';')
 ubs = pd.read_csv("dados/ubs.csv", sep=';')
 dados_indigenas = pd.read_excel('dados/Aldeias polo sul.xlsx')
+dados_indigenas['Latitude'] = pd.to_numeric(dados_indigenas['Latitude'], errors = 'coerce')
+dados_indigenas = dados_indigenas.dropna(subset = 'Latitude')
 
 # Ajusta colunas
 for df_local in [hospitais, ubs]:
