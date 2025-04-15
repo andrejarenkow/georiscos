@@ -206,6 +206,31 @@ fig.add_trace(go.Scattermapbox(
     opacity = 0.7
 ))
 
+# Carregar o GeoJSON da URL
+url = "https://raw.githubusercontent.com/andrejarenkow/geodata/refs/heads/main/municipios_rs_CRS/RS_Municipios_2021.json"
+geojson_municipios = requests.get(url).json()
+
+# Adicionar apenas os contornos dos polígonos
+for feature in geojson_municipios["features"]:
+    geometry = feature["geometry"]
+    if geometry["type"] == "Polygon":
+        coords_list = [geometry["coordinates"]]
+    elif geometry["type"] == "MultiPolygon":
+        coords_list = geometry["coordinates"]
+    else:
+        continue  # ignora outros tipos
+
+    for polygon in coords_list:
+        for ring in polygon:
+            lons, lats = zip(*ring)
+            fig.add_trace(go.Scattergeo(
+                lon=lons,
+                lat=lats,
+                mode="lines",
+                line=dict(color="blue", width=0.5),
+                showlegend=False
+            ))
+
 # Função para converter cor hex para rgba com opacidade
 def hex_to_rgba(hex_color, alpha=0.5):
     hex_color = hex_color.lstrip("#")
