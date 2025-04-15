@@ -216,9 +216,6 @@ gdf = gdf.to_crs("EPSG:4326")
 # Simplifica os polígonos (ajuste a tolerância conforme necessário)
 gdf["geometry"] = gdf["geometry"].simplify(tolerance=0.01, preserve_topology=True)
 
-# Cria figura
-fig = go.Figure()
-
 # Adiciona apenas contornos
 for geom in gdf.geometry:
     if geom.geom_type == "Polygon":
