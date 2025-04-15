@@ -10,6 +10,70 @@ st.set_page_config(page_title="Mapa de Hospitais, UBS e Alertas INMET", layout="
 # Título
 st.title("Hospitais, UBS, Aldeias Indígenas e Alertas do INMET no Rio Grande do Sul")
 
+# Busca de dados de deslizamentos
+# Requisição
+url = "https://georisk.cemaden.gov.br/?dia=0&grid=intermediaria&markers=LocaisDeslizamentosMarker"
+headers = {"User-Agent": "Mozilla/5.0"}
+response = requests.get(url, headers=headers)
+
+dados = []
+
+if response.status_code == 200:
+    soup = BeautifulSoup(response.text, 'html.parser')
+    scripts = soup.find_all("script")
+
+    for script in scripts:
+        texto = script.text.replace('\\', '')
+
+        # Pega apenas trechos dentro de self.__next_f.push([...])
+        match_push = re.search(r'self\.__next_f\.push\(\[(.*?)\]\)', texto, re.DOTALL)
+        if not match_push:
+            continue
+
+        conteudo = match_push.group(1)
+
+        # Extrai todos os dicionários que contenham Latitude e Longitude
+        blocos = re.findall(r'{[^}]*"Latitude":[^}]*"Longitude":[^}]*}', conteudo)
+
+        for bloco in blocos:
+            try:
+                data = re.search(r'"Data Ocorrência":"(.*?)"', bloco)
+                mag = re.search(r'"Magnitude_evento":"(.*?)"', bloco)
+                prec = re.search(r'"Precisão_localização":"(.*?)"', bloco)
+                fonte = re.search(r'"Fonte_informação":"(.*?)"', bloco)
+                lat = re.search(r'"Latitude":(-?\d+\.?\d*)', bloco)
+                lon = re.search(r'"Longitude":(-?\d+\.?\d*)', bloco)
+
+                if data and mag and prec and fonte and lat and lon:
+                    dados.append({
+                        "Data Ocorrência": data.group(1),
+                        "Magnitude_evento": mag.group(1),
+                        "Precisão_localização": prec.group(1),
+                        "Fonte_informação": fonte.group(1),
+                        "Latitude": float(lat.group(1)),
+                        "Longitude": float(lon.group(1))
+                    })
+            except Exception:
+                continue
+else:
+    print("Erro ao acessar o site.")
+
+# Transforma em DataFrame
+df = pd.DataFrame(dados).drop_duplicates().reset_index(drop=True)
+
+
+# Filtros para os limites do estado do Rio Grande do Sul
+lat_min, lat_max = -33.75, -27.0
+lon_min, lon_max = -57.65, -49.5
+
+# Aplicando o filtro
+df_deslizamentos = df[
+    (df['Latitude'] >= lat_min) & (df['Latitude'] <= lat_max) &
+    (df['Longitude'] >= lon_min) & (df['Longitude'] <= lon_max)
+].reset_index(drop=True)
+
+
+
 # Lê os dados
 hospitais = pd.read_csv("dados/hospitais.csv", sep=';')
 ubs = pd.read_csv("dados/ubs.csv", sep=';')
@@ -107,6 +171,18 @@ fig.add_trace(go.Scattermapbox(
     marker=go.scattermapbox.Marker(size=8, color="#f49200"),
     text=dados_indigenas["Aldeia"] + " - " + dados_indigenas["Município"],
     name='Aldeias indígenas',
+    hoverinfo='text',
+    opacity = 0.7
+))
+
+# Adiciona os pontos de deslizamentos
+fig.add_trace(go.Scattermapbox(
+    lat=df_deslizamentos["Latitude"],
+    lon=df_deslizamentos["Longitude"],
+    mode='markers',
+    marker=go.scattermapbox.Marker(size=8, color="#8c592f"),
+    text=df_deslizamentos["Magnitude_evento"],
+    name='Deslizamentos',
     hoverinfo='text',
     opacity = 0.7
 ))
