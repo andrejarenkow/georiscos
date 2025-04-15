@@ -23,6 +23,15 @@ col3.image('https://github.com/andrejarenkow/csv/blob/master/logo_estado%20(3)%2
 # Título
 st.title("Hospitais, UBS, Aldeias Indígenas e Alertas do INMET no Rio Grande do Sul")
 
+# Sidebar para upload do arquivo
+st.sidebar.header("Georiscos")
+
+# Sidebar para upload do arquivo
+texto = """
+aaaaaaaaaa
+"""
+st.sidebar.write(texto)
+
 # Busca de dados de deslizamentos
 # Requisição
 url = "https://georisk.cemaden.gov.br/?dia=0&grid=intermediaria&markers=LocaisDeslizamentosMarker"
