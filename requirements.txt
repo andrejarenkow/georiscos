@@ -4,3 +4,4 @@ plotly
 geopandas
 geojson
 openpyxl
+bs4
