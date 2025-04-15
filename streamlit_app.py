@@ -199,4 +199,4 @@ for feature in geojson_data["features"]:
     ).add_to(m)
 
 # Exibe o mapa
-st_data = st_folium(m, width=1400, height=800)
+st_data = st_folium(m, width=1400, height=800, returned_objects=[])
