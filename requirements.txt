@@ -5,3 +5,4 @@ geopandas
 geojson
 openpyxl
 bs4
+streamlit-folium
