@@ -227,6 +227,38 @@ for feature in geojson_data["features"]:
 
     folium.LayerControl(collapsed=False).add_to(m)
 
+from branca.element import Template, MacroElement
+
+# HTML da legenda
+legend_html = """
+{% macro html() %}
+
+<div style="
+    position: fixed; 
+    bottom: 50px; left: 50px; width: 260px; 
+    z-index:9999; font-size:14px;
+    background-color: white;
+    padding: 10px;
+    border:2px solid grey;
+    border-radius: 5px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+">
+    <b>Legenda:</b><br>
+    <i style="background: #0055CC; width: 12px; height: 12px; display: inline-block;"></i> Hospitais<br>
+    <i style="background: #c90101; width: 12px; height: 12px; display: inline-block;"></i> UBS<br>
+    <i style="background: orange; width: 12px; height: 12px; display: inline-block;"></i> Aldeias Indígenas<br>
+    <i style="background: #8c592f; width: 12px; height: 12px; display: inline-block;"></i> Deslizamentos<br>
+    <i style="background: rgba(255,0,0,0.6); width: 12px; height: 12px; display: inline-block;"></i> Alertas INMET<br>
+    <i style="background: none; border: 1px solid #555; width: 12px; height: 12px; display: inline-block;"></i> Municípios do RS
+</div>
+
+{% endmacro %}
+"""
+
+# Adiciona a legenda ao mapa
+legend = MacroElement()
+legend._template = Template(legend_html)
+m.get_root().add_child(legend)
 
 
 # Exibe o mapa
