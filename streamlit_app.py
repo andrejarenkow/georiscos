@@ -198,5 +198,32 @@ for feature in geojson_data["features"]:
         popup=f"{descricao} - Estados: {estados}"
     ).add_to(m)
 
+# Adiciona camada com os municípios do RS
+url_municipios_rs = "https://raw.githubusercontent.com/andrejarenkow/geodata/refs/heads/main/municipios_rs_CRS/RS_Municipios_2021.json"
+
+try:
+    gjson_municipios = requests.get(url_municipios_rs).json()
+
+    folium.GeoJson(
+        gjson_municipios,
+        name="Municípios do RS",
+        style_function=lambda feature: {
+            'fillColor': 'none',
+            'color': '#555',
+            'weight': 1,
+            'fillOpacity': 0.1
+        },
+        tooltip=folium.GeoJsonTooltip(
+            fields=["NM_MUN"],  # nome da coluna no GeoJSON
+            aliases=["Município:"],
+            localize=True
+        )
+    ).add_to(m)
+
+    folium.LayerControl(collapsed=False).add_to(m)
+
+except Exception as e:
+    st.warning(f"Não foi possível carregar os municípios do RS: {e}")
+
 # Exibe o mapa
 st_data = st_folium(m, width=1400, height=800, returned_objects=[])
