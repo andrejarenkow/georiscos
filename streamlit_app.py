@@ -6,6 +6,7 @@ import geojson
 import json
 from bs4 import BeautifulSoup
 import re
+import geopandas as gpd
 
 # Configurações da página
 st.set_page_config(
@@ -233,7 +234,7 @@ for geom in gdf.geometry:
             lon=lons,
             lat=lats,
             mode="lines",
-            line=dict(color="blue", width=0.5),
+            line=dict(color="black", width=0.2),
             showlegend=False
         ))
 # Função para converter cor hex para rgba com opacidade
