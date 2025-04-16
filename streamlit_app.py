@@ -24,7 +24,7 @@ col2.header('Mapa de Riscos no Rio Grande do Sul')
 col3.image('https://github.com/andrejarenkow/csv/blob/master/logo_estado%20(3)%20(1).png?raw=true', width=150)
 
 st.sidebar.header("Georiscos")
-st.sidebar.write("aaaaaaaaaa")
+st.sidebar.write("Protótipo para análise de risco baseada nos alertas do INMET e do CEMADEM.")
 
 # Busca dados de deslizamentos
 url = "https://georisk.cemaden.gov.br/?dia=0&grid=intermediaria&markers=LocaisDeslizamentosMarker"
