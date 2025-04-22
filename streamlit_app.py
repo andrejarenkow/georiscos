@@ -240,16 +240,16 @@ m.add_child(layer_ubs)
 m.add_child(layer_indigena)
 m.add_child(layer_deslizamentos)
 
-# Tile Layer
-folium.WmsTileLayer(
-    url="https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
-    name="test",
-    fmt="image/png",
-    layers="nexrad-n0r-900913",
-    attr=u"Weather data © 2012 IEM Nexrad",
-    transparent=True,
+# Tile Layer do OpenTopoMap
+folium.TileLayer(
+    tiles='https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    name='OpenTopoMap',
+    attr='Map data: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
+         '<a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: © <a href="https://opentopomap.org">OpenTopoMap</a> '
+         '(<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+    max_zoom=17,
     overlay=True,
-    control=True,
+    control=True
 ).add_to(m)
 
 folium.LayerControl(collapsed=False).add_to(m)
