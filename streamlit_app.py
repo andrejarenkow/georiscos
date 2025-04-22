@@ -189,7 +189,7 @@ for _, row in ubs.iterrows():
 for _, row in dados_indigenas.iterrows():
     folium.Marker(
         location=[row["Latitude"], row["Longitude"]],
-        icon=folium.Icon(color="orange", icon="fa-campground"),
+        icon=folium.Icon(color="orange", icon="campground", prefix = 'fa'),
         popup=f'Aldeia: {row["Aldeia"]} - {row["Município"]}'
     ).add_to(m)
 
