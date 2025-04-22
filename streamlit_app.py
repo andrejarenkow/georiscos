@@ -252,6 +252,17 @@ folium.TileLayer(
     control=True
 ).add_to(m)
 
+# Camada Thunderforest Outdoors
+folium.TileLayer(
+    tiles=f"https://{{s}}.tile.thunderforest.com/outdoors/{{z}}/{{x}}/{{y}}{{r}}.png?apikey={apikey}",
+    name="Thunderforest Outdoors",
+    attr='&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, '
+         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    max_zoom=22,
+    overlay=True,
+    control=True
+).add_to(m)
+
 folium.LayerControl(collapsed=False).add_to(m)
 # Exibe o mapa
 st_data = st_folium(m, width=1400, height=800, returned_objects=[])
