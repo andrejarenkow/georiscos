@@ -165,7 +165,7 @@ except Exception as e:
 for _, row in hospitais.iterrows():
     folium.CircleMarker(
         location=[row["latitude"], row["longitude"]],
-        radius=6,
+        radius=8,
         color="#0055CC",
         #fill=True,
         #fill_color="#0055CC",
@@ -179,9 +179,9 @@ for _, row in ubs.iterrows():
         location=[row["latitude"], row["longitude"]],
         radius=5,
         color="#c90101",
-        fill=True,
-        fill_color="#c90101",
-        fill_opacity=0.7,
+        #fill=True,
+        #fill_color="#c90101",
+        #fill_opacity=0.7,
         popup=f'UBS: {row["nome_da_unidade"]} - {row["municipio"]}'
     ).add_to(m)
 
