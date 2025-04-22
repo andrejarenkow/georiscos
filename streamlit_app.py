@@ -260,6 +260,6 @@ legend_html = """
 #legend._template = Template(legend_html)
 #m.get_root().add_child(legend)
 
-
+folium.LayerControl(collapsed=False).add_to(m)
 # Exibe o mapa
 st_data = st_folium(m, width=1400, height=800, returned_objects=[])
