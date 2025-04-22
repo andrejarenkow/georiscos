@@ -240,6 +240,18 @@ m.add_child(layer_ubs)
 m.add_child(layer_indigena)
 m.add_child(layer_deslizamentos)
 
+# Tile Layer
+folium.WmsTileLayer(
+    url="https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
+    name="test",
+    fmt="image/png",
+    layers="nexrad-n0r-900913",
+    attr=u"Weather data © 2012 IEM Nexrad",
+    transparent=True,
+    overlay=True,
+    control=True,
+).add_to(m)
+
 folium.LayerControl(collapsed=False).add_to(m)
 # Exibe o mapa
 st_data = st_folium(m, width=1400, height=800, returned_objects=[])
