@@ -150,7 +150,7 @@ try:
 
     folium.GeoJson(
         gjson_municipios,
-        name="Municípios do RS",
+        #name="Municípios do RS",
         style_function=lambda feature: {
             'fillColor': 'none',
             'color': '#555',
