@@ -256,9 +256,9 @@ legend_html = """
 """
 
 # Adiciona a legenda ao mapa
-legend = MacroElement()
-legend._template = Template(legend_html)
-m.get_root().add_child(legend)
+#legend = MacroElement()
+#legend._template = Template(legend_html)
+#m.get_root().add_child(legend)
 
 
 # Exibe o mapa
