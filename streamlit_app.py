@@ -167,9 +167,9 @@ for _, row in hospitais.iterrows():
         location=[row["latitude"], row["longitude"]],
         radius=6,
         color="#0055CC",
-        fill=True,
-        fill_color="#0055CC",
-        fill_opacity=0.7,
+        #fill=True,
+        #fill_color="#0055CC",
+        #fill_opacity=0.7,
         popup=f'Hospital: {row["nome_da_unidade"]} - {row["municipio"]}'
     ).add_to(m)
 
