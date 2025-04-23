@@ -85,6 +85,7 @@ dados_indigenas['Latitude'] = pd.to_numeric(dados_indigenas['Latitude'], errors 
 dados_indigenas = dados_indigenas.dropna(subset = 'Latitude')
 escolas_estaduais = pd.read_csv("dados/escolas_estaduais.csv", sep=';')
 barragens = pd.read_csv("dados/barragens_risco_danopotencial_alto.csv", sep=';')
+barragens = barragens[barragens['risco'] == 'Alto']
 
 # Ajusta colunas
 for df_local in [hospitais, ubs]:
