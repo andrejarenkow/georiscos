@@ -237,7 +237,7 @@ for _, row in barragens.iterrows():
         #fill=True,
         #fill_color="#c90101",
         #fill_opacity=0.7,
-        popup=f'Escola: {row["nm_barragem"]} - {row["municipio"]}'
+        popup=f'Barragem: {row["nm_barragem"]} - {row["municipio"]}'
     ).add_to(layer_barragens)
 
 # Adiciona polígonos dos alertas
