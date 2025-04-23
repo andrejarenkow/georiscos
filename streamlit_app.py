@@ -219,7 +219,7 @@ for _, row in escolas_estaduais.iterrows():
     folium.CircleMarker(
         location=[row["latitude"], row["longitude"]],
         radius=5,
-        color="#91E6CD",
+        color="#E1007D",
         #fill=True,
         #fill_color="#c90101",
         #fill_opacity=0.7,
