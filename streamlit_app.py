@@ -233,7 +233,7 @@ for _, row in barragens.iterrows():
     folium.CircleMarker(
         location=[row["latitude"], row["longitude"]],
         radius=5,
-        color="#64508C",
+        color="#21346D",
         #fill=True,
         #fill_color="#c90101",
         #fill_opacity=0.7,
