@@ -84,6 +84,7 @@ dados_indigenas = pd.read_excel('dados/Aldeias polo sul.xlsx')
 dados_indigenas['Latitude'] = pd.to_numeric(dados_indigenas['Latitude'], errors = 'coerce')
 dados_indigenas = dados_indigenas.dropna(subset = 'Latitude')
 escolas_estaduais = pd.read_csv("dados/escolas_estaduais.csv", sep=';')
+barragens = pd.read_csv("dados/barragens_risco_danopotencial_alto.csv", sep=';')
 
 # Ajusta colunas
 for df_local in [hospitais, ubs]:
@@ -143,6 +144,7 @@ layer_ubs = folium.FeatureGroup(name='UBS')
 layer_indigena = folium.FeatureGroup(name='Território Indígena')
 layer_deslizamentos = folium.FeatureGroup(name='Deslizamentos')
 layer_escolas_estaduais = folium.FeatureGroup(name='Escolas Estaduais')
+layer_barragens = folium.FeatureGroup(name='Barragens Risco ou Dano Potencial Altos')
 
 # Adiciona camada com os municípios do RS
 url_municipios_rs = "https://raw.githubusercontent.com/andrejarenkow/geodata/refs/heads/main/municipios_rs_CRS/RS_Municipios_2021.json"
@@ -226,6 +228,18 @@ for _, row in escolas_estaduais.iterrows():
         popup=f'Escola: {row["escola"]} - {row["municipio"]}'
     ).add_to(layer_escolas_estaduais)
 
+# Adiciona Barragens
+for _, row in barragens.iterrows():
+    folium.CircleMarker(
+        location=[row["latitude"], row["longitude"]],
+        radius=5,
+        color="#64508C",
+        #fill=True,
+        #fill_color="#c90101",
+        #fill_opacity=0.7,
+        popup=f'Escola: {row["escola"]} - {row["municipio"]}'
+    ).add_to(layer_barragens)
+
 # Adiciona polígonos dos alertas
 for feature in geojson_data["features"]:
     coords = feature["geometry"]["coordinates"][0]
@@ -254,6 +268,7 @@ m.add_child(layer_ubs)
 m.add_child(layer_indigena)
 m.add_child(layer_deslizamentos)
 m.add_child(layer_escolas_estaduais)
+m.add_child(layer_barragens)
 
 # Tile Layer do OpenTopoMap
 folium.TileLayer(
