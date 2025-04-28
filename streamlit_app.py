@@ -16,7 +16,7 @@ st.set_page_config(
     page_title="Georiscos",
     page_icon=":foggy:",
     layout="wide",
-    initial_sidebar_state='collapsed'
+    initial_sidebar_state='expanded'
 )
 
 # Cabeçalho
@@ -340,7 +340,7 @@ with coluna_mapa:
     aba_escolas.dataframe(pd.DataFrame(escolas_estaduais_dentro))
     
     with aba_mapa:
-        st_data = st_folium(m, width=1200, height=700, returned_objects=[])
+        st_data = st_folium(m, width=900, height=700, returned_objects=[])
 
 # Exibe as métricas
 with coluna_metricas:
@@ -354,7 +354,7 @@ with coluna_metricas:
 # Implementação de chat
 with st.sidebar:
     messages = st.container(height=300)
-    if prompt := st.chat_input("Say something"):
+    if prompt := st.chat_input("Pergunte algo"):
         messages.chat_message("user").write(prompt)
         messages.chat_message("assistant").write(f"Echo: {prompt}")
 
