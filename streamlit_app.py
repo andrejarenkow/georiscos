@@ -16,7 +16,7 @@ st.set_page_config(
     page_title="Georiscos",
     page_icon=":foggy:",
     layout="wide",
-    initial_sidebar_state='expanded'
+    initial_sidebar_state='collapsed'
 )
 
 # Cabeçalho
