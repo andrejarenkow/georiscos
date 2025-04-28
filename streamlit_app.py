@@ -330,7 +330,13 @@ for layer in [layer_municipios, layer_alertas, layer_hospitais, layer_ubs, layer
 folium.LayerControl(collapsed=False).add_to(m)
 # Exibe o mapa
 with coluna_mapa:
-    st_data = st_folium(m, width=1200, height=700, returned_objects=[])
+    # Exibindo as tabelas
+    # --- Cria as abas ---
+    aba_mapa, aba_hospitais, aba_ubs, aba_indigenas, aba_escolas = st.tabs(['Mapa', "Hospitais", "UBS", "Aldeias Indígenas", "Escolas Estaduais"])
+    
+    aba_ubs.dataframe(pd.DataFrame(ubs_dentro))
+    with aba_mapa:
+        st_data = st_folium(m, width=1200, height=700, returned_objects=[])
 
 # Exibe as métricas
 with coluna_metricas:
@@ -341,9 +347,5 @@ with coluna_metricas:
     st.metric('Escolas estaduais em área de alerta', value = len(escolas_estaduais_dentro))
     st.metric('Barragens em área de alerta', value = len(barragens_dentro))
 
-# Exibindo as tabelas
-# --- Cria as abas ---
-aba_hospitais, aba_ubs, aba_indigenas, aba_escolas = st.tabs(["Hospitais", "UBS", "Aldeias Indígenas", "Escolas Estaduais"])
 
-aba_ubs.dataframe(pd.DataFrame(ubs_dentro))
 
