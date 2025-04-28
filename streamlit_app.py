@@ -182,7 +182,7 @@ layer_ubs = folium.FeatureGroup(name='UBS')
 layer_indigena = folium.FeatureGroup(name='Território Indígena')
 layer_deslizamentos = folium.FeatureGroup(name='Deslizamentos')
 layer_escolas_estaduais = folium.FeatureGroup(name='Escolas Estaduais')
-layer_barragens = folium.FeatureGroup(name='Barragens Risco ou Dano Potencial Altos')
+layer_barragens = folium.FeatureGroup(name='Barragens')
 layer_alertas = folium.FeatureGroup(name='Alertas INMET')
 layer_topo = folium.FeatureGroup(name='Topografia')
 
