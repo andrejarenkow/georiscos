@@ -159,7 +159,7 @@ gdf_ubs = df_para_gdf(ubs)
 gdf_dados_indigenas = df_para_gdf(dados_indigenas, lon_col='Longitude', lat_col='Latitude')
 gdf_escolas_estaduais = df_para_gdf(escolas_estaduais)
 gdf_barragens = df_para_gdf(barragens)
-gdf_deslizamentos = df_para_gdf(df_deslizamentos)
+gdf_deslizamentos = df_para_gdf(df_deslizamentos, lon_col='Longitude', lat_col='Latitude')
 
 # --- Filtra os pontos que estão dentro do polígono ---
 hospitais_dentro = gdf_hospitais[gdf_hospitais.within(polygon_union)]
