@@ -34,7 +34,7 @@ headers = {"User-Agent": "Mozilla/5.0"}
 response = requests.get(url, headers=headers)
 
 # Layout
-coluna_metricas, coluna_mapa = st.columns([1,2])
+coluna_mapa, coluna_metricas = st.columns([1,2])
 
 dados = []
 
