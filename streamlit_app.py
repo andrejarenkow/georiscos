@@ -330,4 +330,4 @@ for layer in [layer_municipios, layer_alertas, layer_hospitais, layer_ubs, layer
 folium.LayerControl(collapsed=False).add_to(m)
 # Exibe o mapa
 with coluna_mapa:
-    st_data = st_folium(m, width=1400, height=800, returned_objects=[])
+    st_data = st_folium(m, width=800, height=600, returned_objects=[])
