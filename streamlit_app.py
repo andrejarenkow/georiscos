@@ -284,7 +284,6 @@ m.add_child(layer_alertas)
 #    overlay=True,
 #    control=True
 #).add_to(m)
-geojson_data
 
 
 #folium.LayerControl(collapsed=False).add_to(m)
