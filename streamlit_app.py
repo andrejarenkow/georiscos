@@ -264,7 +264,7 @@ for feature in geojson_data["features"]:
 
 
 
-    folium.LayerControl(collapsed=True).add_to(m)
+    #folium.LayerControl(collapsed=True).add_to(m)
 
 
 m.add_child(layer_hospitais)
