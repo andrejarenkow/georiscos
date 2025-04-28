@@ -33,6 +33,9 @@ url = "https://georisk.cemaden.gov.br/?dia=0&grid=intermediaria&markers=LocaisDe
 headers = {"User-Agent": "Mozilla/5.0"}
 response = requests.get(url, headers=headers)
 
+# Layout
+coluna_metricas, coluna_mapa = st.columns([1,2])
+
 dados = []
 
 if response.status_code == 200:
@@ -326,4 +329,5 @@ for layer in [layer_municipios, layer_alertas, layer_hospitais, layer_ubs, layer
 
 folium.LayerControl(collapsed=False).add_to(m)
 # Exibe o mapa
-st_data = st_folium(m, width=1400, height=800, returned_objects=[])
+with coluna_mapa:
+    st_data = st_folium(m, width=1400, height=800, returned_objects=[])
