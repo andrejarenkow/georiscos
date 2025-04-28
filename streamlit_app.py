@@ -334,3 +334,8 @@ with coluna_mapa:
 
 with coluna_metricas:
     st.metric('UBS em área de alerta', value = len(ubs_dentro))
+    st.metric('Hospitais em área de alerta', value = len(hospitais_dentro))
+    st.metric('Comunidades indígenas em área de alerta', value = len(dados_indigenas_dentro))
+    st.metric('Histórico de deslizamentos em área de alerta', value = len(df_deslizamentos_dentro))
+    st.metric('Escolas estaduais em área de alerta', value = len(escolas_estaduais_dentro))
+    st.metric('Barragens em área de alerta', value = len(barragens_dentro))
