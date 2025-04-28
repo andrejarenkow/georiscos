@@ -287,6 +287,9 @@ folium.TileLayer(
     control=True
 ).add_to(layer_topo)
 
+# Adiciona as camadas no mapa
+for layer in [layer_municipios, layer_alertas, layer_hospitais, layer_ubs, layer_indigena, layer_deslizamentos, layer_escolas_estaduais, layer_barragens, layer_topo]:
+    layer.add_to(m)
 
 folium.LayerControl(collapsed=False).add_to(m)
 # Exibe o mapa
