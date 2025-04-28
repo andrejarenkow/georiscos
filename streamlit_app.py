@@ -140,6 +140,7 @@ geojson_data = obter_alertas_rs()
 m = folium.Map(location=[-30.537, -52.965], zoom_start=6, tiles="OpenStreetMap")
 
 # Criando as camadas do mapa
+layer_municipios = folium.FeatureGroup(name='Municipios')
 layer_hospitais = folium.FeatureGroup(name='Hospitais')
 layer_ubs = folium.FeatureGroup(name='UBS')
 layer_indigena = folium.FeatureGroup(name='Território Indígena')
@@ -170,7 +171,7 @@ try:
             aliases=["Município:"],
             localize=True
         )
-    ).add_to(m)
+    ).add_to(layer_municipios)
 
 except Exception as e:
     st.warning(f"Não foi possível carregar os municípios do RS: {e}")
