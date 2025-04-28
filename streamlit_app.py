@@ -136,6 +136,37 @@ def obter_alertas_rs():
 # Carrega os alertas
 geojson_data = obter_alertas_rs()
 
+# Percorrer todos os features e transformar cada geometry em shapely object
+polygons = [shape(feature['geometry']) for feature in geojson_data['features']]
+
+# Unir todos os polígonos em um só
+polygon_union = unary_union(polygons)
+
+# Deixar apenas os pontos dentro dos alertas
+# --- Função para transformar um DataFrame em GeoDataFrame ---
+def df_para_gdf(df, lon_col='longitude', lat_col='latitude'):
+    return gpd.GeoDataFrame(
+        df,
+        geometry=gpd.points_from_xy(df[lon_col], df[lat_col]),
+        crs="EPSG:4326"
+    )
+
+# --- Converte todos os seus DataFrames em GeoDataFrames ---
+gdf_hospitais = df_para_gdf(hospitais)
+gdf_ubs = df_para_gdf(ubs)
+gdf_dados_indigenas = df_para_gdf(dados_indigenas, lon_col='Longitude', lat_col='Latitude')
+gdf_escolas_estaduais = df_para_gdf(escolas_estaduais)
+gdf_barragens = df_para_gdf(barragens)
+gdf_deslizamentos = df_para_gdf(df_deslizamentos)
+
+# --- Filtra os pontos que estão dentro do polígono ---
+hospitais_dentro = gdf_hospitais[gdf_hospitais.within(polygon_union)]
+ubs_dentro = gdf_ubs[gdf_ubs.within(polygon_union)]
+dados_indigenas_dentro = gdf_dados_indigenas[gdf_dados_indigenas.within(polygon_union)]
+escolas_estaduais_dentro = gdf_escolas_estaduais[gdf_escolas_estaduais.within(polygon_union)]
+barragens_dentro = gdf_barragens[gdf_barragens.within(polygon_union)]
+df_deslizamentos_dentro = gdf_deslizamentos[gdf_deslizamentos.within(polygon_union)]
+
 # Mapa base centrado no RS
 m = folium.Map(location=[-30.537, -52.965], zoom_start=6, tiles="OpenStreetMap")
 
@@ -177,7 +208,7 @@ except Exception as e:
     st.warning(f"Não foi possível carregar os municípios do RS: {e}")
 
 # Adiciona hospitais
-for _, row in hospitais.iterrows():
+for _, row in hospitais_dentro.iterrows():
     folium.CircleMarker(
         location=[row["latitude"], row["longitude"]],
         radius=8,
@@ -189,7 +220,7 @@ for _, row in hospitais.iterrows():
     ).add_to(layer_hospitais)
 
 # Adiciona UBS
-for _, row in ubs.iterrows():
+for _, row in ubs_dentro.iterrows():
     folium.CircleMarker(
         location=[row["latitude"], row["longitude"]],
         radius=5,
@@ -201,7 +232,7 @@ for _, row in ubs.iterrows():
     ).add_to(layer_ubs)
 
 # Adiciona aldeias indígenas
-for _, row in dados_indigenas.iterrows():
+for _, row in dados_indigenas_dentro.iterrows():
     folium.Marker(
         location=[row["Latitude"], row["Longitude"]],
         icon=folium.Icon(color="orange", icon="campground", prefix = 'fa'),
@@ -209,7 +240,7 @@ for _, row in dados_indigenas.iterrows():
     ).add_to(layer_indigena)
 
 # Adiciona deslizamentos
-for _, row in df_deslizamentos.iterrows():
+for _, row in df_deslizamentos_dentro.iterrows():
     folium.CircleMarker(
         location=[row["Latitude"], row["Longitude"]],
         radius=6,
@@ -221,7 +252,7 @@ for _, row in df_deslizamentos.iterrows():
     ).add_to(layer_deslizamentos)
 
 # Adiciona Escolas Estaduais
-for _, row in escolas_estaduais.iterrows():
+for _, row in escolas_estaduais_dentro.iterrows():
     folium.CircleMarker(
         location=[row["latitude"], row["longitude"]],
         radius=5,
@@ -233,7 +264,7 @@ for _, row in escolas_estaduais.iterrows():
     ).add_to(layer_escolas_estaduais)
 
 # Adiciona Barragens
-for _, row in barragens.iterrows():
+for _, row in barragens_dentro.iterrows():
     folium.CircleMarker(
         location=[row["latitude"], row["longitude"]],
         radius=5,
