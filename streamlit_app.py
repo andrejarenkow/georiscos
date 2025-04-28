@@ -299,14 +299,14 @@ for feature in geojson_data["features"]:
 
     #folium.LayerControl(collapsed=True).add_to(m)
 
-
+m.add_child(layer_alertas)
 m.add_child(layer_hospitais)
 m.add_child(layer_ubs)
 m.add_child(layer_indigena)
 m.add_child(layer_deslizamentos)
 m.add_child(layer_escolas_estaduais)
 m.add_child(layer_barragens)
-m.add_child(layer_alertas)
+
 
 # Tile Layer do OpenTopoMap
 folium.TileLayer(
