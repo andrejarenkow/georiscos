@@ -335,6 +335,10 @@ with coluna_mapa:
     aba_mapa, aba_hospitais, aba_ubs, aba_indigenas, aba_escolas = st.tabs(['Mapa', "Hospitais", "UBS", "Aldeias Indígenas", "Escolas Estaduais"])
     
     aba_ubs.dataframe(pd.DataFrame(ubs_dentro))
+    aba_hospitais.dataframe(pd.DataFrame(hospitais_dentro))
+    aba_indigenas.dataframe(pd.DataFrame(dados_indigenas_dentro))
+    aba_escolas.dataframe(pd.DataFrame(escolas_estaduais_dentro))
+    
     with aba_mapa:
         st_data = st_folium(m, width=1200, height=700, returned_objects=[])
 
