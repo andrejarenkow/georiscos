@@ -146,6 +146,7 @@ layer_indigena = folium.FeatureGroup(name='Território Indígena')
 layer_deslizamentos = folium.FeatureGroup(name='Deslizamentos')
 layer_escolas_estaduais = folium.FeatureGroup(name='Escolas Estaduais')
 layer_barragens = folium.FeatureGroup(name='Barragens Risco ou Dano Potencial Altos')
+layer_alertas = folium.FeatureGroup(name='Alertas INMET')
 
 # Adiciona camada com os municípios do RS
 url_municipios_rs = "https://raw.githubusercontent.com/andrejarenkow/geodata/refs/heads/main/municipios_rs_CRS/RS_Municipios_2021.json"
@@ -257,7 +258,7 @@ for feature in geojson_data["features"]:
         fill_opacity=0.4,
         weight=2,
         popup=f"{descricao} - Estados: {estados}"
-    ).add_to(m)
+    ).add_to(layer_alertas)
 
 
 
@@ -270,6 +271,7 @@ m.add_child(layer_indigena)
 m.add_child(layer_deslizamentos)
 m.add_child(layer_escolas_estaduais)
 m.add_child(layer_barragens)
+m.add_child(layer_alertas)
 
 # Tile Layer do OpenTopoMap
 folium.TileLayer(
