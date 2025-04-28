@@ -8,6 +8,8 @@ import re
 import geopandas as gpd
 import folium
 from streamlit_folium import st_folium
+from shapely.geometry import shape
+from shapely.ops import unary_union
 
 # Configuração da página
 st.set_page_config(
