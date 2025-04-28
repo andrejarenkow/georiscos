@@ -147,6 +147,7 @@ layer_deslizamentos = folium.FeatureGroup(name='Deslizamentos')
 layer_escolas_estaduais = folium.FeatureGroup(name='Escolas Estaduais')
 layer_barragens = folium.FeatureGroup(name='Barragens Risco ou Dano Potencial Altos')
 layer_alertas = folium.FeatureGroup(name='Alertas INMET')
+layer_topo = folium.FeatureGroup(name='Topografia')
 
 # Adiciona camada com os municípios do RS
 url_municipios_rs = "https://raw.githubusercontent.com/andrejarenkow/geodata/refs/heads/main/municipios_rs_CRS/RS_Municipios_2021.json"
@@ -274,18 +275,18 @@ m.add_child(layer_barragens)
 m.add_child(layer_alertas)
 
 # Tile Layer do OpenTopoMap
-#folium.TileLayer(
-#    tiles='https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-#    name='Topografia',
-#    attr='Map data: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
-#         '<a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: © <a href="https://opentopomap.org">OpenTopoMap</a> '
-#         '(<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-#    max_zoom=17,
-#    overlay=True,
-#    control=True
-#).add_to(m)
+folium.TileLayer(
+    tiles='https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    name='Topografia',
+    attr='Map data: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
+         '<a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: © <a href="https://opentopomap.org">OpenTopoMap</a> '
+         '(<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+    max_zoom=17,
+    overlay=True,
+    control=True
+).add_to(layer_topo)
 
 
-#folium.LayerControl(collapsed=False).add_to(m)
+folium.LayerControl(collapsed=False).add_to(m)
 # Exibe o mapa
 st_data = st_folium(m, width=1400, height=800, returned_objects=[])
