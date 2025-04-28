@@ -345,5 +345,5 @@ with coluna_metricas:
 # --- Cria as abas ---
 aba_hospitais, aba_ubs, aba_indigenas, aba_escolas, aba_barragens = st.tabs(["Hospitais", "UBS", "Aldeias Indígenas", "Escolas Estaduais", "Barragens"])
 
-aba.dataframe(ubs_dentro)
+aba_ubs.dataframe(ubs_dentro)
 
