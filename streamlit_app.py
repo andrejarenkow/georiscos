@@ -274,16 +274,16 @@ m.add_child(layer_barragens)
 m.add_child(layer_alertas)
 
 # Tile Layer do OpenTopoMap
-folium.TileLayer(
-    tiles='https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-    name='Topografia',
-    attr='Map data: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
-         '<a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: © <a href="https://opentopomap.org">OpenTopoMap</a> '
-         '(<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-    max_zoom=17,
-    overlay=True,
-    control=True
-).add_to(m)
+#folium.TileLayer(
+#    tiles='https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+#    name='Topografia',
+#    attr='Map data: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
+#         '<a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: © <a href="https://opentopomap.org">OpenTopoMap</a> '
+#         '(<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+#    max_zoom=17,
+#    overlay=True,
+#    control=True
+#).add_to(m)
 
 
 
