@@ -331,3 +331,6 @@ folium.LayerControl(collapsed=False).add_to(m)
 # Exibe o mapa
 with coluna_mapa:
     st_data = st_folium(m, width=800, height=600, returned_objects=[])
+
+with coluna_metricas:
+    st.metric('UBS em área de alerta', value = len(ubs_dentro))
