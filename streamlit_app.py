@@ -121,10 +121,10 @@ def obter_alertas_rs():
 
         lista_avisos_rs = []
         for aviso in dados.get('hoje', []):
-            if 'Rio Grande do Sul' in aviso.get('estados', ''):
+            if 'Rio Grande do Sul' in aviso.get('estados', '') and 'Potencial' not in aviso.get('severidade', ''):
                 lista_avisos_rs.append(aviso)
         for aviso in dados.get('futuro', []):
-            if 'Rio Grande do Sul' in aviso.get('estados', ''):
+            if 'Rio Grande do Sul' in aviso.get('estados', '') and 'Potencial' not in aviso.get('severidade', ''):
                 lista_avisos_rs.append(aviso)
 
         lista_features = []
